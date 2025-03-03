@@ -13,6 +13,12 @@ module.exports.registerUser = async (req, res, next) => {
 
     const { fullname, email, password } = req.body;
 
+    const isUserAlreadyExist = await userModel.findOne({ email });
+
+    if(isUserAlreadyExist){
+        return res.status(403).json({ message : "user already exists" });
+    }
+
     if (!fullname || !fullname.firstname || !fullname.lastname) {
         return res.status(400).json({ message: "Full name is required" });
     }

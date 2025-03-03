@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports.authUser = async (req, res, next) => {
     try {
-        const token = req.cookies.token || (req.headers.Authorization && req.headers.Authorization.split(' ')[1]);
+        const token = req.cookies.token || (req.headers.Authorization && req.headers.Authorization?.split(' ')[1]);
         console.log(token);
 
         if (!token) {

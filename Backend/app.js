@@ -6,6 +6,7 @@ dotenv.config();
 const cookieParser = require('cookie-parser');
 const connectToDb = require('./DB/db');
 const userRoutes = require('./routes/user.routes');
+const captainRoutes = require('./routes/captain.routes');
 connectToDb();
 
 app.use(cookieParser());
@@ -17,6 +18,9 @@ app.get('/', (req, res) => {
     res.send("Welcome maa");
 })
 
+console.log("App.js tak to thik hai")
+
 app.use('/users', userRoutes);
+app.use('/captain',captainRoutes);
 
 module.exports = app;
