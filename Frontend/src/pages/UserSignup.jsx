@@ -1,32 +1,54 @@
 import React from "react";
 import { useState } from "react";
 import { Link } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { UserDataContext } from "../context/UserContext";
 
 function UserSignup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [FirstName, setFirstName ] = useState('');
   const [ LastName, setLastName ] = useState(''); 
-  const [ userData, setUserData ] = useState({});
+  const { user, setUser } = React.useContext(UserDataContext); 
+  // const [ userData, setUserData ] = useState({});
 
-  const submitHandler = (e) => {
+  const navigate = useNavigate();
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-
-    setUserData({
-      fullName : {
-        firstName : FirstName,
-        lastName : LastName
+  
+    const newUser = {
+      fullname: {
+        firstname: FirstName,
+        lastname: LastName,
       },
-      email : email,
-      password : password
-    })
-
-    console.log(userData);
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setPassword("");
+      email: email,
+      password: password,
+    };
+  
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/users/register`,
+        newUser
+      );
+  
+      if (response.status === 201) {
+        setUser(response.data.user);
+        console.log("User registered successfully:",user);
+        localStorage.setItem('token', response.data.token);
+        navigate("/home");
+      }
+  
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      console.error("Registration failed:", error.response?.data || error.message);
+    }
   };
+  
   return (
     <div className="p-7 h-screen flex flex-col justify-between">
       <div>
@@ -70,7 +92,7 @@ function UserSignup() {
             className="bg-[#eeeeee] rounded px-4 py-2 border w-full text-lg mb-7 placeholder:text-base"
           />
           <button className="bg-[#111] text-white w-full text-semibold px-4 py-2 font-s text-lg">
-            Submit
+            Create Account
           </button>
           <p className="text-center">
             Already have an account ?{" "}

@@ -4,13 +4,14 @@ const jwt = require('jsonwebtoken');
 const blacklistTokenModel = require('../models/blacklistToken.model');
 const captainModel = require('../models/captain.model');
 
-// const userModel = require('../models/user.model');n
+// const userModel = require('../models/user.model');
 
 
 module.exports.authUser = async (req, res, next) => {
     try {
-        const token = req.cookies.token || (req.headers.Authorization && req.headers.Authorization?.split(' ')[1]);
-        console.log(token);
+        const token = req.cookies.token || (req.headers.authorization && req.headers.authorization.split(' ')[1]);
+        console.log("Nahi Mila kuch to bol");
+        console.log(token)
 
         if (!token) {
             console.log("No token provided");

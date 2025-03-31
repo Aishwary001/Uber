@@ -1,12 +1,35 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { UserDataContext } from "../context/UserContext";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 function UserLogin() {  // ✅ Component name should start with an uppercase letter
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const submitHandler = (e) => {
+  const navigate = useNavigate();
+  const { user , setUser } = React.useContext(UserDataContext);
+
+  const submitHandler = async(e) => {
     e.preventDefault();
     console.log({email, password});
+
+    const userData = {
+      email : email,
+      password : password
+    }
+
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/users/login`,
+      userData
+    )
+
+    if(response.status === 200){
+      localStorage.setItem('token', response.data.token)
+      setUser(response.data.user);
+      navigate('/home');
+      console.log("Login successfully", user);
+    }
     setEmail('');
     setPassword('');
   }
@@ -35,7 +58,7 @@ function UserLogin() {  // ✅ Component name should start with an uppercase let
             className="bg-[#eeeeee] rounded px-4 py-2 border w-full text-lg mb-7 placeholder:text-base"
           />
           <button className="bg-[#111] text-white w-full text-semibold px-4 py-2 font-s text-lg">
-            Submit
+            Login
           </button>
           <p className="text-center">
             New here? <Link to='/signup' className="text-blue-600">Create new Account</Link>

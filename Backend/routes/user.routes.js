@@ -5,8 +5,8 @@ const userController = require('../controllers/user.controller');  // Fix file n
 const authMiddleware = require('../middlewares/auth.middleware');
 
 router.post('/register',[
-    body('email').isEmail().withMessage('Invalid Email'),
     body('fullname.firstname').isLength({min : 3}).withMessage("First name must be atleast three character"),
+    body('email').isEmail().withMessage('Invalid Email'),
     body('password').isLength({min : 6}).withMessage("Password must required"),
 ],   
     userController.registerUser
@@ -22,4 +22,5 @@ router.post('/login',[
 router.get('/profile', authMiddleware.authUser , userController.getUserProfile);
 
 router.get('/logout', authMiddleware.authUser, userController.logoutUser);
+
 module.exports = router;
